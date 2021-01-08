@@ -3,6 +3,7 @@
  import Search from "./model/Search" ;
  import { elements , renderLoader, clearLoader } from "./view/base" ;
  import * as searchView from './view/SearchView';
+ import Recipe from './model/Recipe'; 
  
 /*
 *    WEB APP төрөл 
@@ -37,4 +38,13 @@ const controlSearch = async () => {
 elements.searchForm.addEventListener("submit", e => {
     e.preventDefault() ;
     controlSearch() ;
+});
+elements.pageButtons.addEventListener("click", e => {
+    const btn = e.target.closest(".btn-inline");
+    if(btn) {
+        const gotoPageNumber = parseInt(btn.dataset.goto, 10);
+        searchView.clearSearchResult();
+        searchView.renderRecipes(state.search.result, gotoPageNumber);
+    }
+    
 });
