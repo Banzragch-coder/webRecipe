@@ -2,8 +2,7 @@ require("@babel/polyfill");
 import axios from "axios" ;
 export default class Search {
     constructor(query) {
-
-        this.query = query ;
+         this.query = query ;
     }
     async  doSearch( ) {
         try {
@@ -15,9 +14,5 @@ export default class Search {
            }catch(error) {
             alert('Asuudal garlaa :' + error);
         }
-        
     } 
-
-       
-
 }
