@@ -1,9 +1,7 @@
-// searchView deer delgetstei holbootoi ymnud bichne
 import { elements } from "./base";
-// Private function 
+
 const renderRecipe = recipe => {
-    console.log(recipe.title);
-    const markup = ` 
+  const markup = `
     <li>
         <a class="results__link" href="#${recipe.recipe_id}">
             <figure class="results__fig">
@@ -15,55 +13,60 @@ const renderRecipe = recipe => {
             </div>
         </a>
     </li>
-    `;
-// ul рүүгээ нэмнэ
-elements.searchResultList.insertAdjacentHTML("beforeend", markup);
+  `;
+  // ul рүүгээ нэмнэ
+  elements.searchResultList.insertAdjacentHTML("beforeend", markup);
 };
 export const clearSearchQuery = () => {
-  elements.searchInput.value = ""; 
-  elements.pageButtons.innerHTML = ""; 
+  elements.searchInput.value = "";
 };
 
 export const clearSearchResult = () => {
   elements.searchResultList.innerHTML = "";
+  elements.pageButtons.innerHTML = "";
 };
+
 export const getInput = () => elements.searchInput.value;
 
 export const renderRecipes = (recipes, currentPage = 1, resPerPage = 10) => {
-// Хайлтын үр дүнг хуудаслаж үзүүлэх
-    const start = (currentPage-1) * resPerPage;
-    const end = currentPage * resPerPage;
+  // Хайлтын үр дүнг хуудаслаж үзүүлэх
+  //page  = 2, start = 10, end = 20
+  const start = (currentPage - 1) * resPerPage;
+  const end = currentPage * resPerPage;
 
-  recipes.slice(start,end).forEach(renderRecipe);
-//   Хуудаслалтын товчуудыг гаргаж ирэх
-  const totalPages = Math.cell(recipe.length / resPerPage);
- renderButtons (currentPage , totalPage);
+  recipes.slice(start, end).forEach(renderRecipe);
+
+  // Хуудаслалтын товчуудыг гаргаж ирэх
+  const totalPages = Math.ceil(recipes.length / resPerPage);
+  renderButtons(currentPage, totalPages);
 };
+
+// type ===> 'prev', 'next'
 const createButton = (
-    pege,
-    type,
-    direction
-) => `
-<button class="btn-inline results__btn--${type}" data-goto=${psge}>
-<span>Хуудас ${page}</span> 
-<svg class="search__icon">
+  page,
+  type,
+  direction
+) => `<button class="btn-inline results__btn--${type}" data-goto=${page}>
+  <span>Хуудас ${page}</span>
+  <svg class="search__icon">
     <use href="img/icons.svg#icon-triangle-${direction}"></use>
-</svg>
+  </svg>
+  </button>`;
 
-</button>
-`;
+const renderButtons = (currentPage, totalPages) => {
+  let buttonHtml;
 
-const renderButtons = (currentPage, totalPage) => {
-    let button;
-    if(currentPage === 1 && totalPage > 1) {
-     button = createButton(2, "next" , 'right');
-    } else if (currentPage < totalPages) {
-        button = createButton(currentPage-1, "prev", " left");
-        button += createButton(currentPage+1, "next", "right");
-    } else if (currentPage === totalPage) {
-     button = createButton(currentPage-1, "prev", "left");
-    }
+  if (currentPage === 1 && totalPages > 1) {
+    // 1-р хуудсан дээр байна, 2-р хуудас гэдэг товчийг гарга
+    buttonHtml = createButton(2, "next", "right");
+  } else if (currentPage < totalPages) {
+    // Өмнөх болон дараачийн хуудас руу шилжих товчуудыг үзүүл
+    buttonHtml = createButton(currentPage - 1, "prev", "left");
+    buttonHtml += createButton(currentPage + 1, "next", "right");
+  } else if (currentPage === totalPages) {
+    // Хамгийн сүүлийн хуудас дээр байна. Өмнөх рүү шилжүүлэх товчийг л үзүүлнэ.
+    buttonHtml = createButton(currentPage - 1, "prev", "left");
+  }
 
-    elements.pageButtons.insertAdjacentHTML('afterbegin ', button);
-    
+  elements.pageButtons.insertAdjacentHTML("afterbegin", buttonHtml);
 };
